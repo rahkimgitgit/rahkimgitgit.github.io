@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Background with Image</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            font-family: "Helvetica Neue", sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            font-weight: normal;
+            text-transform: none;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        img {
+            width: 55%;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+            transition: opacity 0.5s;
+        }
+
+        .snowflake {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            opacity: 0.8;
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0vh) translateX(0vw);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(calc(-50vw + 100vw * var(--random-x)));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" loop>
+        <source src="Westminster St.m4a" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <h1 id="clickableText" onclick="toggleContent()">Iloveerin!</h1>
+    <img id="clickableImage" src="1stphoto.jpg" alt="Avatar">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let audio = document.getElementById("backgroundMusic");
+            audio.volume = 0.5;
+            let playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    document.body.addEventListener("click", function() {
+                        audio.play();
+                        startSnowfall();
+                    }, { once: true });
+                });
+            }
+        });
+
+        function toggleContent() {
+            let textElement = document.getElementById("clickableText");
+            let imageElement = document.getElementById("clickableImage");
+            
+            if (textElement.innerText === "Iloveerin!") {
+                textElement.innerText = "yayyouclickedit!";
+                imageElement.src = "2ndphoto.jpg";
+            } else {
+                textElement.innerText = "Iloveerin!";
+                imageElement.src = "1stphoto.jpg";
+            }
+        }
+
+        function startSnowfall() {
+            for (let i = 0; i < 100; i++) {
+                let snowflake = document.createElement("div");
+                snowflake.className = "snowflake";
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.top = "-10px";
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.setProperty('--random-x', Math.random());
+                
+                document.body.appendChild(snowflake);
+                
+                setTimeout(() => snowflake.remove(), 5000);
+            }
+        }
+
+        document.body.addEventListener("click", startSnowfall);
+    </script>
+</body>
+</html>
